@@ -1,5 +1,4 @@
 #!/bin/bash
-
 TIME=$(date "+%Y-%m-%d-%H")
 CHTIME=$(date "+%Y-%m-%d-%H" -r "/tmp/openclash_last_version" 2>/dev/null)
 LAST_OPVER="/tmp/openclash_last_version"

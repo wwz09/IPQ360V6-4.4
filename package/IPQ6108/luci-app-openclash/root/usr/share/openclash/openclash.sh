@@ -104,13 +104,7 @@ fi
 config_cus_up()
 {
 	if [ -z "$CONFIG_PATH" ]; then
-      for file_name in /etc/openclash/config/*
-      do
-         if [ -f "$file_name" ]; then
-            CONFIG_PATH=$file_name
-            break
-         fi
-      done
+      CONFIG_PATH="/etc/openclash/config/$(ls -lt /etc/openclash/config/ | grep -E '.yaml|.yml' | head -n 1 |awk '{print $9}')"
       uci -q set openclash.config.config_path="$CONFIG_PATH"
       uci commit openclash
 	fi
@@ -456,7 +450,6 @@ EOF
       if [ "${PIPESTATUS[0]}" -eq 0 ] && [ -s "$CFG_FILE" ]; then
          #prevent ruby unexpected error
          sed -i -E 's/protocol-param: ([^,'"'"'"''}( *#)\n\r]+)/protocol-param: "\1"/g' "$CFG_FILE" 2>/dev/null
-         sed -i '/^ \{0,\}enhanced-mode:/d' "$CFG_FILE" >/dev/null 2>&1
          config_test
          if [ $? -ne 0 ]; then
             LOG_OUT "Error: Config File Tested Faild, Please Check The Log Infos!"
@@ -592,10 +585,6 @@ sub_info_get()
       CONFIG_FILE="/etc/openclash/config/$name.yaml"
       BACKPACK_FILE="/etc/openclash/backup/$name.yaml"
    fi
-
-   if [ -n "$2" ] && [ "$2" != "$CONFIG_FILE" ]; then
-      return
-   fi
    
    if [ ! -z "$keyword" ] || [ ! -z "$ex_keyword" ]; then
       config_list_foreach "$section" "keyword" server_key_match "keyword"
@@ -645,7 +634,6 @@ sub_info_get()
    if [ "${PIPESTATUS[0]}" -eq 0 ] && [ -s "$CFG_FILE" ]; then
       #prevent ruby unexpected error
       sed -i -E 's/protocol-param: ([^,'"'"'"''}( *#)\n\r]+)/protocol-param: "\1"/g' "$CFG_FILE" 2>/dev/null
-      sed -i '/^ \{0,\}enhanced-mode:/d' "$CFG_FILE" >/dev/null 2>&1
       config_test
       if [ $? -ne 0 ]; then
          LOG_OUT "Error: Config File Tested Faild, Please Check The Log Infos!"
@@ -686,7 +674,7 @@ sub_info_get()
 
 #分别获取订阅信息进行处理
 config_load "openclash"
-config_foreach sub_info_get "config_subscribe" "$1"
+config_foreach sub_info_get "config_subscribe"
 uci -q delete openclash.config.config_update_path
 uci commit openclash
 

@@ -11,11 +11,14 @@ del_lock() {
    rm -rf "/tmp/lock/openclash_update.lock"
 }
 
-[ ! -f "/tmp/openclash_last_version" ] && /usr/share/openclash/openclash_version.sh 2>/dev/null
-if [ ! -f "/tmp/openclash_last_version" ]; then
-   LOG_OUT "Error: Failed to Get Version Information, Please Try Again Later..."
-   SLOG_CLEAN
-   exit 0
+#一键更新
+if [ "$1" = "one_key_update" ]; then
+   uci -q set openclash.config.enable=1
+   uci -q commit openclash
+   /usr/share/openclash/openclash_core.sh "$1" >/dev/null 2>&1 &
+   /usr/share/openclash/openclash_core.sh "TUN" "$1" >/dev/null 2>&1 &
+   /usr/share/openclash/openclash_core.sh "Meta" "$1" >/dev/null 2>&1 &
+   wait
 fi
 
 LAST_OPVER="/tmp/openclash_last_version"
@@ -23,26 +26,8 @@ LAST_VER=$(sed -n 1p "$LAST_OPVER" 2>/dev/null |sed "s/^v//g" |tr -d "\n")
 OP_CV=$(rm -f /var/lock/opkg.lock && opkg status luci-app-openclash 2>/dev/null |grep 'Version' |awk -F '-' '{print $1}' |awk -F 'Version: ' '{print $2}' |awk -F '.' '{print $2$3}' 2>/dev/null)
 OP_LV=$(sed -n 1p "$LAST_OPVER" 2>/dev/null |awk -F '-' '{print $1}' |awk -F 'v' '{print $2}' |awk -F '.' '{print $2$3}' 2>/dev/null)
 RELEASE_BRANCH=$(uci -q get openclash.config.release_branch || echo "master")
-LOG_FILE="/tmp/openclash.log"
 github_address_mod=$(uci -q get openclash.config.github_address_mod || echo 0)
-
-#一键更新
-if [ "$1" = "one_key_update" ]; then
-   uci -q set openclash.config.enable=1
-   uci -q commit openclash
-   if [ "$github_address_mod" = "0" ]; then
-      LOG_OUT "Tip: If the download fails, try setting the CDN in Overwrite Settings - General Settings - Github Address Modify Options"
-   fi
-   /usr/share/openclash/openclash_core.sh "$1" >/dev/null 2>&1 &
-   /usr/share/openclash/openclash_core.sh "TUN" "$1" >/dev/null 2>&1 &
-   /usr/share/openclash/openclash_core.sh "Meta" "$1" >/dev/null 2>&1 &
-   wait
-else
-   if [ "$github_address_mod" = "0" ]; then
-      LOG_OUT "Tip: If the download fails, try setting the CDN in Overwrite Settings - General Settings - Github Address Modify Options"
-   fi
-fi
-
+LOG_FILE="/tmp/openclash.log"
 set_lock
 
 if [ -n "$OP_CV" ] && [ -n "$OP_LV" ] && [ "$(expr "$OP_LV" \> "$OP_CV")" -eq 1 ] && [ -f "$LAST_OPVER" ]; then
@@ -129,7 +114,7 @@ EOF
    fi
 else
    if [ ! -f "$LAST_OPVER" ] || [ -z "$OP_CV" ] || [ -z "$OP_LV" ]; then
-      LOG_OUT "Error: Failed to Get Version Information, Please Try Again Later..."
+      LOG_OUT "Failed to Get Version Information, Please Try Again Later..."
    else
       LOG_OUT "OpenClash Has not Been Updated, Stop Continuing!"
    fi

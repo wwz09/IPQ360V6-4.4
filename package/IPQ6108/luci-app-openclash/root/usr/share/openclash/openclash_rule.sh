@@ -152,14 +152,8 @@
       ifrestart=0
    
       if [ -z "$CONFIG_FILE" ]; then
-         for file_name in /etc/openclash/config/*
-         do
-            if [ -f "$file_name" ]; then
-               CONFIG_FILE=$file_name
-               CONFIG_NAME=$(echo "$CONFIG_FILE" |awk -F '/' '{print $5}' 2>/dev/null)
-               break
-            fi
-         done
+         CONFIG_FILE="/etc/openclash/config/$(ls -lt /etc/openclash/config/ | grep -E '.yaml|.yml' | head -n 1 |awk '{print $9}')"
+	      CONFIG_NAME=$(echo "$CONFIG_FILE" |awk -F '/' '{print $5}' 2>/dev/null)
       fi
 
       if [ -z "$CONFIG_NAME" ]; then
