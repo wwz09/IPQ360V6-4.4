@@ -1,12 +1,11 @@
-#!/bin/bash
-log_max_size="128" #KB
-log_file="/tmp/unblockneteasemusic.log"
+#!/bin/sh
+# SPDX-License-Identifier: GPL-3.0-only
+# Copyright (C) 2019-2022 Tianling Shen <cnsztl@immortalwrt.org>
 
-((log_size = "$(ls -l "${log_file}" | awk -F ' ' '{print $5}')" / "1024"))
-(("${log_size}" >= "${log_max_size}")) && echo "" >"${log_file}"
-if [ "$(uci get unblockneteasemusic.@unblockneteasemusic[0].daemon_enable)" == "1" ]; then
-    if [ -z "$(ps | grep "UnblockNeteaseMusic" | grep -v "grep")" ]; then
-        echo "$(date -R) try restart..." >>"${log_file}"
-        /etc/init.d/unblockneteasemusic restart
-    fi
-fi
+NAME="unblockneteasemusic"
+
+log_max_size="4" #使用KB计算
+log_file="/tmp/$NAME.log"
+
+log_size="$(expr $(ls -l "${log_file}" | awk -F ' ' '{print $5}') / "1024")"
+[ "${log_size}" -lt "${log_max_size}" ] || echo "" > "${log_file}"
