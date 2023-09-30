@@ -23,8 +23,7 @@ _M.hysteria = {
 	name = "Hysteria",
 	repo = "HyNetwork/hysteria",
 	get_url = gh_release_url,
-	cmd_version = "version | awk '/^Version:/ {print $2}'",
-	remote_version_str_replace = "app/",
+	cmd_version = "-v | awk '{print $3}'",
 	zipped = false,
 	default_path = "/usr/bin/hysteria",
 	match_fmt_str = "linux%%-%s$",
@@ -50,27 +49,13 @@ _M["trojan-go"] = {
 	}
 }
 
-_M.singbox = {
-	name = "Sing-Box",
-	repo = "SagerNet/sing-box",
-	get_url = gh_pre_release_url,
-	cmd_version = "version | awk '{print $3}' | sed -n 1P",
-	zipped = true,
-	zipped_suffix = "tar.gz",
-	default_path = "/usr/bin/sing-box",
-	match_fmt_str = "linux%%-%s",
-	file_tree = {
-		x86_64 = "amd64"
-	}
-}
-
-_M.xray = {
-	name = "Xray",
-	repo = "XTLS/Xray-core",
+_M.v2ray = {
+	name = "V2ray",
+	repo = "v2fly/v2ray-core",
 	get_url = gh_pre_release_url,
 	cmd_version = "version | awk '{print $2}' | sed -n 1P",
 	zipped = true,
-	default_path = "/usr/bin/xray",
+	default_path = "/usr/bin/v2ray",
 	match_fmt_str = "linux%%-%s",
 	file_tree = {
 		x86_64 = "64",
@@ -78,6 +63,17 @@ _M.xray = {
 		mips   = "mips32",
 		mipsel = "mips32le"
 	}
+}
+
+_M.xray = {
+	name = "Xray",
+	repo = "XTLS/Xray-core",
+	get_url = gh_pre_release_url,
+	cmd_version = _M.v2ray.cmd_version,
+	zipped = true,
+	default_path = "/usr/bin/xray",
+	match_fmt_str = _M.v2ray.match_fmt_str,
+	file_tree = _M.v2ray.file_tree
 }
 
 _M["chinadns-ng"] = {
