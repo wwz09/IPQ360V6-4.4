@@ -1,8 +1,7 @@
 /**
- *  Argon is a clean HTML5 theme for LuCI. It is based on luci-theme-material and Argon Template
+ *  Argone is a clean HTML5 theme for LuCI. It is based on luci-theme-material and Argone Template
  *
  *  luci-theme-argone
- *      Copyright 2023 Jerrykuku
  *
  *  Have a bug? Please create an issue here on GitHub!
  *      https://github.com/kenzok78/luci-theme-argone/issues
@@ -18,7 +17,7 @@
  *  luci-theme-material:
  *      https://github.com/LuttyYang/luci-theme-material/
  *
- *  Argon Theme
+ *  Argone Theme
  *	    https://demos.creative-tim.com/argon-dashboard/index.html
  *
  *  Login background
