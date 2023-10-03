@@ -1,2 +1,0 @@
-msgid "Control"
-msgstr "家长控制"
