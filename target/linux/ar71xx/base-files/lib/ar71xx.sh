@@ -542,8 +542,7 @@ mikrotik_board_detect() {
 	*"SXT Lite5")
 		name="rb-sxt5n"
 		;;
-	*"wAP 2nD r2"|\
-	*"wAP 2nD r3")
+	*"wAP 2nD r2")
 		name="rb-wap-2nd"
 		;;
 	*"wAP R-2nD"|\
