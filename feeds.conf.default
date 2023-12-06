@@ -3,6 +3,6 @@ src-git luci https://github.com/sdf8057/luci.git;2023
 src-git routing https://github.com/koksaver/routing.git;openwrt-21.02
 src-git telephony https://github.com/openwrt/telephony.git;openwrt-21.02
 src-git kmod-nft-fullcone https://github.com/fullcone-nat-nftables/nft-fullcone;master
-#src-git 360packages https://github.com/wwz09/360v6-packages;main
+src-git 360packages https://github.com/wwz09/360v6-packages;main
 #src-git passwall_packages https://github.com/xiaorouji/openwrt-passwall-packages.git;main
 #src-git passwall https://github.com/xiaorouji/openwrt-passwall.git;main
